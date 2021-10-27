@@ -1,6 +1,13 @@
 #include "trie.h"
 #include <stdio.h>
-#include <time.h>
+#include <sys/time.h>
+
+double wtime()
+{
+    struct timeval t;
+    gettimeofday(&t, NULL);
+    return (double)t.tv_sec + (double)t.tv_usec * 1E-6;
+}
 
 void printMenu()
 {
@@ -24,10 +31,10 @@ int main()
         return 0;
     }
 
-    clock_t time_start;
-    clock_t time_end;
+    double time_start;
+    double time_end;
 
-    time_start = clock();
+    time_start = wtime();
     for (int i = 0; i < 100000; i++)
     {
         ewords = fgets(words, sizeof(words), stream);
@@ -38,12 +45,12 @@ int main()
         trieInsert(&head, words, i);
         // printf("%s\n", words);
     }
-    time_end = clock() - time_start;
-    printf("insert = %lf\n", (double)time_end / CLOCKS_PER_SEC);
+    time_end = wtime() - time_start;
+    printf("insert = %lf\n", time_end);
 
     rewind(stream);
 
-    time_start = clock();
+    time_start = wtime();
     for (int i = 0; i < 100000; i++)
     {
         ewords = fgets(words, sizeof(words), stream);
@@ -53,12 +60,12 @@ int main()
         }
         trieLookup(head, words); //Без вывода
     }
-    time_end = clock() - time_start;
-    printf("lookup = %lf\n", (double)time_end / CLOCKS_PER_SEC);
+    time_end = wtime() - time_start;
+    printf("lookup = %lf\n", time_end);
 
     rewind(stream);
 
-    time_start = clock();
+    time_start = wtime();
     for (int i = 0; i < 100000; i++)
     {
         ewords = fgets(words, sizeof(words), stream);
@@ -68,8 +75,8 @@ int main()
         }
         trieDelete(&head, words);
     }
-    time_end = clock() - time_start;
-    printf("delete = %lf\n", (double)time_end / CLOCKS_PER_SEC);
+    time_end = wtime() - time_start;
+    printf("delete = %lf\n", time_end);
 
     /* User interface
     char key[30];
